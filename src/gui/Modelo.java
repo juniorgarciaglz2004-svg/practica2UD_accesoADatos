@@ -11,6 +11,7 @@ public class Modelo {
     private String ip;
     private String user;
     private String password;
+    private String db;
     private Connection conexion;
 
     public Modelo() {
@@ -29,6 +30,7 @@ public class Modelo {
             ip = prop.getProperty("ip");
             user = prop.getProperty("user");
             password = prop.getProperty("pass");
+            db = prop.getProperty("db");
 
         } catch (Exception e) {
             System.out.println("Exception: " + e);
@@ -45,7 +47,7 @@ public class Modelo {
 
         try {
             conexion = DriverManager.getConnection(
-                    "jdbc:mysql://"+ip+":3306/practica2ud",user, password);
+                    "jdbc:mysql://"+ip+":3306/"+db,user, password);
         } catch (SQLException sqle) {
             try {
                 conexion = DriverManager.getConnection(
