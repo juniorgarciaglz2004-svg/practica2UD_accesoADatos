@@ -46,6 +46,7 @@ public class Vista extends JFrame{
     }
 
     public void initFrame() {
+        this.setContentPane(panel1);
         //al clickar en cerrar no hace nada
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
