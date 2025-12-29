@@ -66,7 +66,7 @@
                   <text value="NOMBRE"/>
                 </properties>
               </component>
-              <component id="8d2ae" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="8d2ae" class="javax.swing.JTextField" binding="nombreProducto">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -90,10 +90,10 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text value="FECHA_CREACION"/>
+                  <text value="MODELO"/>
                 </properties>
               </component>
-              <component id="d2ef5" class="javax.swing.JButton" binding="anadir_CONDICIONButton">
+              <component id="d2ef5" class="javax.swing.JButton" binding="anadir_PRODUCTOSButton">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
@@ -108,24 +108,10 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text value="FECHA_ACTUALIZACION"/>
+                  <text value="MARCA"/>
                 </properties>
               </component>
-              <component id="1efab" class="com.github.lgooddatepicker.components.DatePicker" binding="date_creacion_condicion">
-                <constraints>
-                  <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="71d1e" class="com.github.lgooddatepicker.components.DatePicker" binding="date_actualizacion_condicion">
-                <constraints>
-                  <grid row="8" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="e870d" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+              <component id="e870d" class="javax.swing.JTextField" binding="descripcionProducto">
                 <constraints>
                   <grid row="4" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -161,22 +147,22 @@
                   <text value="ESTADO"/>
                 </properties>
               </component>
-              <component id="f533a" class="javax.swing.JCheckBox" binding="USADOSCheckBox" default-binding="true">
+              <component id="f533a" class="javax.swing.JCheckBox" binding="productoEstadoUsado">
                 <constraints>
                   <grid row="2" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
-                  <text value="USADOS"/>
+                  <text value="USADO"/>
                 </properties>
               </component>
-              <component id="83499" class="javax.swing.JCheckBox" binding="NUEVOSCheckBox" default-binding="true">
+              <component id="83499" class="javax.swing.JCheckBox" binding="productosEstadoNuevos">
                 <constraints>
                   <grid row="2" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
-                  <text value="NUEVOS"/>
+                  <text value="NUEVO"/>
                 </properties>
               </component>
               <hspacer id="1705">
@@ -185,7 +171,7 @@
                   <forms defaultalign-horz="false"/>
                 </constraints>
               </hspacer>
-              <component id="948b2" class="javax.swing.JCheckBox" binding="REACONDICIONADOCheckBox" default-binding="true">
+              <component id="948b2" class="javax.swing.JCheckBox" binding="productosEstadoReacondicionados">
                 <constraints>
                   <grid row="2" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
@@ -202,12 +188,30 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="2eeaf" class="javax.swing.JTable" binding="table1" default-binding="true">
+                  <component id="2eeaf" class="javax.swing.JTable" binding="tablaProductos">
                     <constraints/>
                     <properties/>
                   </component>
                 </children>
               </scrollpane>
+              <component id="d50c3" class="javax.swing.JTextField" binding="modeloProducto">
+                <constraints>
+                  <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="ede63" class="javax.swing.JTextField" binding="marcaProducto">
+                <constraints>
+                  <grid row="8" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+              </component>
             </children>
           </grid>
           <grid id="1d729" layout-manager="FormLayout">
@@ -392,7 +396,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="f5a5a" class="javax.swing.JTable" binding="table2" default-binding="true">
+                  <component id="f5a5a" class="javax.swing.JTable" binding="tablaKits">
                     <constraints/>
                     <properties/>
                   </component>
@@ -544,7 +548,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="f85c2" class="javax.swing.JTable" binding="table3" default-binding="true">
+                  <component id="f85c2" class="javax.swing.JTable" binding="tablaEmrpresa">
                     <constraints/>
                     <properties/>
                   </component>
@@ -556,4 +560,11 @@
       </tabbedpane>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="grupoEstadoProductos">
+      <member id="f533a"/>
+      <member id="83499"/>
+      <member id="948b2"/>
+    </group>
+  </buttonGroups>
 </form>

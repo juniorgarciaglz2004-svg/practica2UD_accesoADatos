@@ -1,10 +1,9 @@
 package gui;
 
+import modelo.Producto;
+
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class Modelo {
@@ -91,15 +90,47 @@ public class Modelo {
         }
     }
 
+    public ResultSet obtenerProductos() throws SQLException {
+     String sql =   "SELECT " +
+        "id_producto as id, " +
+               " nombre, " +
+               " descripcion, " +
+               " estado, " +
+               " modelo, " +
+               " marca " +
+        " FROM producto";
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        sentencia = conexion.prepareStatement(sql);
+        resultado = sentencia.executeQuery();
+        return resultado;
+
+    }
 
 
-
-
-
-
-
-
-
+    public void adicionarProducto(Producto p) throws SQLException {
+    String sql = "INSERT INTO producto" +
+            "(" +
+            "nombre," +
+            "descripcion," +
+            "estado," +
+            "modelo," +
+            "marca)" +
+            "VALUES" +
+            "(" +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?)";
+    PreparedStatement statement = conexion.prepareStatement(sql);
+    statement.setString(1,p.getNombre());
+    statement.setString(2,p.getDescripcion());
+    statement.setString(3,p.getEstado().name());
+    statement.setString(4,p.getModelo());
+    statement.setString(5,p.getMarca());
+    statement.executeUpdate();
+    }
 
 
 
