@@ -1,16 +1,12 @@
 package gui;
 
-import modelo.EstadoProducto;
-import modelo.Producto;
+import modelo_Clases.EstadoProducto;
+import modelo_Clases.Producto;
 import util.Util;
 
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Controlador {
@@ -28,10 +24,18 @@ private Vista vista;
 
     private void refrescarTodo()  {
         resfrescarProductos();
-//        refrescarEditorial();
-//        refrescarLibros();
+//        refrescarEmpresas();
+//        refrescarKits();
           refrescar = false;
     }
+
+
+    private void adicionarActionListeners()
+    {
+        vista.anadir_PRODUCTOSButton.addActionListener(e -> adicionarProducto());
+    }
+
+    //Parte de productos
 
     void resfrescarProductos () {
         try {
@@ -41,10 +45,6 @@ private Vista vista;
         }
     }
 
-    private void adicionarActionListeners()
-    {
-        vista.anadir_PRODUCTOSButton.addActionListener(e -> adicionarProducto());
-    }
 
     private void adicionarProducto()  {
         Producto p = new Producto();
@@ -85,8 +85,6 @@ private Vista vista;
 
     }
 
-
-
     private DefaultTableModel construirTableModelProductos(ResultSet rs)
             throws SQLException {
 
@@ -95,7 +93,7 @@ private Vista vista;
         columnNames.add("nombre");
         columnNames.add("descripcion");
         columnNames.add("estado");
-        columnNames.add("modelo");
+        columnNames.add("modelo_Clases");
         columnNames.add("marca");
         Vector<Vector<Object>> data = new Vector<>();
         setDataVector(rs, columnNames.size(), data);
@@ -104,6 +102,51 @@ private Vista vista;
 
         return vista.dtmProductos;
 
+    }
+
+    //parte de empresa
+
+    void resfrecarEmpresa()
+    {
+        try {
+            vista.tablaEmrpresa.setModel(construirTableModelEmpresa(modelo.obtenerEmpresa()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void adicionarEmpresas()
+    {
+
+    }
+
+    private DefaultTableModel construirTableModelEmpresa(ResultSet rs)
+    {
+
+        return vista.dtmEmpresa;
+    }
+
+    //parte de kits
+
+    void resfrecarKits()
+    {
+        try {
+            vista.tablaKits.setModel (construirTableModelKits(modelo.obtenerKitEducativo()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void adicionarKits()
+    {
+
+    }
+
+    private DefaultTableModel construirTableModelKits(ResultSet rs)
+    {
+
+        return vista.dtmKits;
     }
 
     private void setDataVector(ResultSet rs, int columnCount, Vector<Vector<Object>> data) throws SQLException {

@@ -1,6 +1,8 @@
 package gui;
 
-import modelo.Producto;
+import modelo_Clases.Empresa;
+import modelo_Clases.Kit_Educativo;
+import modelo_Clases.Producto;
 
 import java.io.*;
 import java.sql.*;
@@ -90,6 +92,8 @@ public class Modelo {
         }
     }
 
+    //PARTE PRODUCTO
+
     public ResultSet obtenerProductos() throws SQLException {
      String sql =   "SELECT " +
         "id_producto as id, " +
@@ -132,6 +136,87 @@ public class Modelo {
     statement.executeUpdate();
     }
 
+    //PARTE KIT EDUCATIVO
 
+    public void adicionarKitEducativo(Kit_Educativo k) throws SQLException {
+        String sql = "INSERT INTO kit" +
+                "(" +
+                "nombre," +
+                "descripcion," +
+                "estado," +
+                "modelo," +
+                "marca)" +
+                "VALUES" +
+                "(" +
+                "?," +
+                "?," +
+                "?," +
+                "?," +
+                "?)";
+        PreparedStatement statement = conexion.prepareStatement(sql);
+
+        statement.executeUpdate();
+
+
+    }
+
+    public ResultSet obtenerKitEducativo() throws SQLException {
+        String sql =   "SELECT " +
+                "id_producto as id, " +
+                " nombre, " +
+                " descripcion, " +
+                " estado, " +
+                " modelo, " +
+                " marca " +
+                " FROM producto";
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        sentencia = conexion.prepareStatement(sql);
+        resultado = sentencia.executeQuery();
+        return resultado;
+
+
+
+    }
+
+    //PARTE EMPRESA
+
+
+
+    public void adicionarEmpresas(Empresa em) throws SQLException {
+        String sql = "INSERT INTO empresa" +
+                "(" +
+                "nombre," +
+                "descripcion," +
+                "estado," +
+                "modelo," +
+                "marca)" +
+                "VALUES" +
+                "(" +
+                "?," +
+                "?," +
+                "?," +
+                "?," +
+                "?)";
+        PreparedStatement statement = conexion.prepareStatement(sql);
+
+        statement.executeUpdate();
+    }
+
+    public ResultSet obtenerEmpresa() throws SQLException {
+        String sql =   "SELECT " +
+                "id_producto as id, " +
+                " nombre, " +
+                " descripcion, " +
+                " estado, " +
+                " modelo, " +
+                " marca " +
+                " FROM producto";
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        sentencia = conexion.prepareStatement(sql);
+        resultado = sentencia.executeQuery();
+        return resultado;
+    }
 
 }
