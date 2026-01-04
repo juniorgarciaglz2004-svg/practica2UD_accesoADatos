@@ -4,9 +4,13 @@ import modelo_Clases.EstadoProducto;
 import modelo_Clases.Producto;
 import util.Util;
 
+import javax.management.StringValueExp;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Vector;
 
 public class Controlador {
@@ -24,8 +28,8 @@ private Vista vista;
 
     private void refrescarTodo()  {
         resfrescarProductos();
-//        refrescarEmpresas();
-//        refrescarKits();
+        resfrecarEmpresa();
+        resfrecarKits();
           refrescar = false;
     }
 
@@ -33,6 +37,86 @@ private Vista vista;
     private void adicionarActionListeners()
     {
         vista.anadir_PRODUCTOSButton.addActionListener(e -> adicionarProducto());
+        vista.eliminar_ProductosButton.addActionListener(e -> eliminarProducto());
+        vista.tablaProductos.setCellSelectionEnabled(true);
+        ListSelectionModel productoModelSeleccion = vista.tablaProductos.getSelectionModel();
+        productoModelSeleccion.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()
+                        && !((ListSelectionModel) e.getSource()).isSelectionEmpty()) {
+                    if (e.getSource().equals(vista.tablaProductos.getSelectionModel())) {
+                        int row = vista.tablaProductos.getSelectedRow();
+                        vista.nombreProducto.setText(String.valueOf(vista.tablaProductos.getValueAt(row, 1)));
+                        vista.descripcionProducto.setText(String.valueOf(vista.tablaProductos.getValueAt(row, 2)));
+                        EstadoProducto estadoProducto = EstadoProducto.valueOf(String.valueOf(vista.tablaProductos.getValueAt(row,3)));
+                        if (estadoProducto==EstadoProducto.NUEVO)
+                        {
+                            vista.productosEstadoNuevos.setSelected(true);
+                        }
+                        else if (estadoProducto==EstadoProducto.USADO)
+                        {
+                            vista.productoEstadoUsado.setSelected(true);
+                        }
+                        else {
+                            vista.productosEstadoReacondicionados.setSelected(true);
+                        }
+                        vista.modeloProducto.setText(String.valueOf(vista.tablaProductos.getValueAt(row, 4)));
+                        vista.marcaProducto.setText(String.valueOf(vista.tablaProductos.getValueAt(row, 5)));
+
+
+                    } else if (e.getValueIsAdjusting()
+                            && ((ListSelectionModel) e.getSource()).isSelectionEmpty() && !refrescar) {
+                        if (e.getSource().equals(vista.tablaKits.getSelectionModel())) {
+                            borrarCamposKits();
+                        } else if (e.getSource().equals(vista.tablaEmrpresa.getSelectionModel())) {
+                            borrarCamposEmpresa();
+                        } else if (e.getSource().equals(vista.tablaProductos.getSelectionModel())) {
+                            borrarCamposProductos();
+                        }
+                    }}});
+
+
+
+
+    }
+
+    private void eliminarProducto() {
+        int id = Integer.parseInt(String.valueOf(vista.tablaProductos.getValueAt(vista.tablaProductos.getSelectedRow(),0)));
+        modelo.eliminarProducto(id);
+        borrarCamposProductos();
+        resfrescarProductos();
+
+
+    }
+
+    private void borrarCamposProductos() {
+        vista.nombreProducto.setText("");
+        vista.descripcionProducto.setText("");
+        vista.productoEstadoUsado.setSelected(true);
+
+
+        vista.modeloProducto.setText("");
+        vista.marcaProducto.setText("");
+    }
+
+    private void borrarCamposEmpresa() {
+    vista.nombreEmpresa.setText("");
+    vista.descripcionEmpresa.setText("");
+    vista.ubicacionEmpresa.setText("");
+    vista.fecha_creacion_Empresa.setDate(LocalDate.now());
+    vista.valoracionSliderEmpresa.setValue(0);
+
+    }
+
+    private void borrarCamposKits() {
+    vista.nombreKit.setText("");
+    vista.descripcionKit.setText("");
+    vista.cantidadKit.setText("");
+    vista.comboBoxEmpresaKit.setSelectedIndex(-1);
+    vista.comboBoxProductoKits.setSelectedIndex(-1);
+    vista.fecha_CreacionKits.setDate(LocalDate.now());
+    vista.fecha_ActualizacionKits.setDate(LocalDate.now());
+    vista.precioKit.setText("");
+    vista.valoracionSliderKit.setValue(0);
     }
 
     //Parte de productos
@@ -44,6 +128,9 @@ private Vista vista;
             e.printStackTrace();
         }
     }
+
+
+
 
 
     private void adicionarProducto()  {

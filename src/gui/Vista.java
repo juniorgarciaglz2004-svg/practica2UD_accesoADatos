@@ -22,10 +22,10 @@ public class Vista extends JFrame{
      JButton modificar_EmpresaButton;
      JTextField nombreKit;
      JTextField descripcionKit;
-     JTextField textField5;
-     JTextField textField6;
+     JTextField nombreEmpresa;
+     JTextField descripcionEmpresa;
      JTextField cantidadKit;
-    DatePicker date_creacion_clasificacion;
+    DatePicker fecha_creacion_Empresa;
     DatePicker fecha_CreacionKits;
      DatePicker fecha_ActualizacionKits;
      JComboBox comboBoxEmpresaKit;
@@ -75,7 +75,7 @@ public class Vista extends JFrame{
         this.dtmKits=new DefaultTableModel();
         this.tablaKits.setModel(dtmKits);
 
-        this.dtmProductos=new DefaultTableModel();
-        this.tablaProductos.setModel(dtmProductos);
+        this.dtmEmpresa=new DefaultTableModel();
+        this.tablaEmrpresa.setModel(dtmEmpresa);
     }
 }

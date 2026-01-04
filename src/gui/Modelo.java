@@ -136,16 +136,40 @@ public class Modelo {
     statement.executeUpdate();
     }
 
+
+    void eliminarProducto(int id) {
+        String sentenciaSql = "DELETE FROM producto WHERE id_producto = ?";
+        PreparedStatement sentencia = null;
+
+        try {
+            sentencia = conexion.prepareStatement(sentenciaSql);
+            sentencia.setInt(1, id);
+            sentencia.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (sentencia != null)
+                try {
+                    sentencia.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+        }
+    }
+
+
     //PARTE KIT EDUCATIVO
 
     public void adicionarKitEducativo(Kit_Educativo k) throws SQLException {
-        String sql = "INSERT INTO kit" +
+        String sql = "INSERT INTO kit_educativo" +
                 "(" +
                 "nombre," +
                 "descripcion," +
-                "estado," +
-                "modelo," +
-                "marca)" +
+                "cantidad," +
+                "fecha_de_creacion," +
+                "fecha_de_actualizacion)" +
+                "precio)" +
+                "valoracion)" +
                 "VALUES" +
                 "(" +
                 "?," +
@@ -162,13 +186,15 @@ public class Modelo {
 
     public ResultSet obtenerKitEducativo() throws SQLException {
         String sql =   "SELECT " +
-                "id_producto as id, " +
-                " nombre, " +
-                " descripcion, " +
-                " estado, " +
-                " modelo, " +
-                " marca " +
-                " FROM producto";
+                "id_kit as id, " +
+                "nombre," +
+                "descripcion," +
+                "cantidad," +
+                "fecha_de_creacion," +
+                "fecha_de_actualizacion," +
+                "precio, " +
+                "valoracion " +
+                " FROM kit_educativo";
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
         sentencia = conexion.prepareStatement(sql);
@@ -186,11 +212,11 @@ public class Modelo {
     public void adicionarEmpresas(Empresa em) throws SQLException {
         String sql = "INSERT INTO empresa" +
                 "(" +
-                "nombre," +
-                "descripcion," +
-                "estado," +
-                "modelo," +
-                "marca)" +
+                " nombre, " +
+                " descripcion, " +
+                " fecha_de_creacion, " +
+                " ubicacion, " +
+                " valoracion " +
                 "VALUES" +
                 "(" +
                 "?," +
@@ -205,13 +231,13 @@ public class Modelo {
 
     public ResultSet obtenerEmpresa() throws SQLException {
         String sql =   "SELECT " +
-                "id_producto as id, " +
+                "id_empresa as id, " +
                 " nombre, " +
                 " descripcion, " +
-                " estado, " +
-                " modelo, " +
-                " marca " +
-                " FROM producto";
+                " fecha_de_creacion, " +
+                " ubicacion, " +
+                " valoracion " +
+                " FROM empresa";
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
         sentencia = conexion.prepareStatement(sql);
