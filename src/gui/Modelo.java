@@ -136,6 +136,25 @@ public class Modelo {
     statement.executeUpdate();
     }
 
+    public void actualizarProducto(Producto p) throws SQLException {
+        String sql = "update producto set " +
+                "nombre = ?," +
+                "descripcion = ?," +
+                "estado = ?," +
+                "modelo = ?," +
+                "marca = ?" +
+                "WHERE id_producto = ?";
+
+        PreparedStatement statement = conexion.prepareStatement(sql);
+        statement.setString(1,p.getNombre());
+        statement.setString(2,p.getDescripcion());
+        statement.setString(3,p.getEstado().name());
+        statement.setString(4,p.getModelo());
+        statement.setString(5,p.getMarca());
+        statement.setInt(6,p.getId());
+        statement.executeUpdate();
+    }
+
 
     void eliminarProducto(int id) {
         String sentenciaSql = "DELETE FROM producto WHERE id_producto = ?";

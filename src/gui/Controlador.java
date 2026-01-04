@@ -38,6 +38,7 @@ private Vista vista;
     {
         vista.anadir_PRODUCTOSButton.addActionListener(e -> adicionarProducto());
         vista.eliminar_ProductosButton.addActionListener(e -> eliminarProducto());
+        vista.modificar_ProductosButton.addActionListener(e -> modificarProducto());
         vista.tablaProductos.setCellSelectionEnabled(true);
         ListSelectionModel productoModelSeleccion = vista.tablaProductos.getSelectionModel();
         productoModelSeleccion.addListSelectionListener(e -> {
@@ -79,7 +80,60 @@ private Vista vista;
 
     }
 
+    private void modificarProducto() {
+
+        if (vista.tablaProductos.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
+
+        Producto p = new Producto();
+        p.setId((Integer) vista.tablaProductos.getValueAt(vista.tablaProductos.getSelectedRow(),0));
+        p.setNombre(vista.nombreProducto.getText());
+        p.setDescripcion(vista.descripcionProducto.getText());
+        p.setMarca(vista.marcaProducto.getText());
+        p.setModelo(vista.modeloProducto.getText());
+        if (vista.productoEstadoUsado.isSelected())
+        {
+            p.setEstado(EstadoProducto.USADO) ;
+        }
+        if (vista.productosEstadoNuevos.isSelected())
+        {
+            p.setEstado(EstadoProducto.NUEVO) ;
+        }
+        if (vista.productosEstadoReacondicionados.isSelected())
+        {
+            p.setEstado(EstadoProducto.REACONDICIONADO) ;
+        }
+
+        if (p.valido())
+        {
+            try {
+                modelo.actualizarProducto(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            resfrescarProductos();
+            vista.nombreProducto.setText("");
+            vista.descripcionProducto.setText("");
+            vista.marcaProducto.setText("");
+            vista.modeloProducto.setText("");
+            vista.productoEstadoUsado.setSelected(true);
+        }
+        else{
+            Util.showErrorAlert("Rellene todos los campos");
+        }
+
+
+    }
+
     private void eliminarProducto() {
+        if (vista.tablaProductos.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
         int id = Integer.parseInt(String.valueOf(vista.tablaProductos.getValueAt(vista.tablaProductos.getSelectedRow(),0)));
         modelo.eliminarProducto(id);
         borrarCamposProductos();
