@@ -1,5 +1,6 @@
 package modelo_Clases;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Kit_Educativo {
@@ -8,11 +9,11 @@ public class Kit_Educativo {
     private int id;
     private String nombre;
     private String descripcion;
-    private String cantidad;
-    private String empresasKit;
-    private String productoKit;
-    private Date fechaCreacion;
-    private Date fechaActualizacion;
+    private int cantidad;
+    private int empresasKit;
+    private int productoKit;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaActualizacion;
     private float precio;
     private int valoracion;
 
@@ -40,43 +41,43 @@ public class Kit_Educativo {
         this.descripcion = descripcion;
     }
 
-    public String getCantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(String cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 
-    public String getEmpresasKit() {
+    public int getEmpresasKit() {
         return empresasKit;
     }
 
-    public void setEmpresasKit(String empresasKit) {
+    public void setEmpresasKit(int empresasKit) {
         this.empresasKit = empresasKit;
     }
 
-    public String getProductoKit() {
+    public int getProductoKit() {
         return productoKit;
     }
 
-    public void setProductoKit(String productoKit) {
+    public void setProductoKit(int productoKit) {
         this.productoKit = productoKit;
     }
 
-    public Date getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Date getFechaActualizacion() {
+    public LocalDate getFechaActualizacion() {
         return fechaActualizacion;
     }
 
-    public void setFechaActualizacion(Date fechaActualizacion) {
+    public void setFechaActualizacion(LocalDate fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
 
@@ -96,7 +97,7 @@ public class Kit_Educativo {
         this.valoracion = valoracion;
     }
 
-    public Kit_Educativo(int id, String nombre, String descripcion, String cantidad, String empresasKit, String productoKit, Date fechaCreacion, Date fechaActualizacion, float precio, int valoracion) {
+    public Kit_Educativo(int id, String nombre, String descripcion, int cantidad, int empresasKit, int productoKit, LocalDate fechaCreacion, LocalDate fechaActualizacion, float precio, int valoracion) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -111,4 +112,45 @@ public class Kit_Educativo {
 
     public Kit_Educativo() {
     }
+
+
+        public boolean valido () {
+
+            if (nombre.trim().length() == 0) {
+                return false;
+            }
+            if (descripcion.trim().length() == 0) {
+                return false;
+            }
+
+            if (cantidad < 0
+            ) {
+                return false;
+            }
+
+
+            if (fechaCreacion == null) {
+                return false;
+            }
+            if (fechaActualizacion == null) {
+                return false;
+            }
+
+            if (precio < 0) {
+                return false;
+            }
+            if (valoracion < 0) {
+                return false;
+            }
+
+            if (empresasKit < 0) {
+                return false;
+            }
+
+            if (productoKit < 0) {
+                return false;
+            }
+            return true;
+
+        }
 }

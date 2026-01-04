@@ -29,7 +29,7 @@ fecha_de_creacion date,
 fecha_de_actualizacion date,
 id_producto int not null,
 id_empresa int not null,
-precio decimal (8,2)not null,
+precio decimal (12,2)not null,
 valoracion int not null
 );
 __

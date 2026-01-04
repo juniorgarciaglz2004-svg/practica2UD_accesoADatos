@@ -2,6 +2,7 @@ package gui;
 
 import modelo_Clases.Empresa;
 import modelo_Clases.EstadoProducto;
+import modelo_Clases.Kit_Educativo;
 import modelo_Clases.Producto;
 import util.Util;
 
@@ -24,8 +25,107 @@ private Vista vista;
         modelo.conectar();
         adicionarActionListenersProductos();
         adicionarActionListenersEmpresas();
+        adicionarActionListenersKit();
 
         refrescarTodo();
+    }
+
+    private void adicionarActionListenersKit() {
+        vista.anadir_KitsButton.addActionListener(e -> adicionarKits());
+        vista.eliminar_KitsButton.addActionListener(e -> eliminarKits());
+        vista.modificar_KitsButton.addActionListener(e -> modificarkits());
+        vista.tablaKits.setCellSelectionEnabled(true);
+        ListSelectionModel kitsModelSeleccion = vista.tablaKits.getSelectionModel();
+        kitsModelSeleccion.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()
+                    && !((ListSelectionModel) e.getSource()).isSelectionEmpty()) {
+                if (e.getSource().equals(vista.tablaKits.getSelectionModel())) {
+                    int row = vista.tablaKits.getSelectedRow();
+                    vista.nombreKit.setText(String.valueOf(vista.tablaKits.getValueAt(row, 1)));
+                    vista.descripcionKit.setText(String.valueOf(vista.tablaKits.getValueAt(row, 2)));
+                    vista.cantidadKit.setText(String.valueOf(vista.tablaKits.getValueAt(row, 3)));
+                    vista.fecha_CreacionKits.setDate(((Date) vista.tablaKits.getValueAt(row, 4)).toLocalDate());
+                    vista.fecha_ActualizacionKits.setDate(((Date) vista.tablaKits.getValueAt(row, 5)).toLocalDate());
+                    vista.precioKit.setText(String.valueOf(vista.tablaKits.getValueAt(row, 6)));
+                    vista.valoracionSliderKit.setValue((Integer) vista.tablaKits.getValueAt(row, 7));
+                    vista.comboBoxEmpresaKit.setSelectedItem(String.valueOf(vista.tablaKits.getValueAt(row, 8)));
+                    vista.comboBoxProductoKits.setSelectedItem(String.valueOf(vista.tablaKits.getValueAt(row, 9)));
+
+
+
+                } else if (e.getValueIsAdjusting()
+                        && ((ListSelectionModel) e.getSource()).isSelectionEmpty() && !refrescar) {
+                    if (e.getSource().equals(vista.tablaKits.getSelectionModel())) {
+                        borrarCamposKits();
+                    } else if (e.getSource().equals(vista.tablaEmrpresa.getSelectionModel())) {
+                        borrarCamposEmpresa();
+                    } else if (e.getSource().equals(vista.tablaProductos.getSelectionModel())) {
+                        borrarCamposProductos();
+                    }
+                }}});
+    }
+
+    private void modificarkits() {
+        if (vista.tablaKits.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
+
+        Kit_Educativo p = new Kit_Educativo();
+        p.setId((Integer) vista.tablaKits.getValueAt(vista.tablaKits.getSelectedRow(),0));
+        p.setNombre(vista.nombreKit.getText());
+        p.setDescripcion(vista.descripcionKit.getText());
+        if (vista.cantidadKit.getText().trim().length()>0)
+        {
+            p.setCantidad(Integer.parseInt(vista.cantidadKit.getText()));
+        }
+        p.setFechaCreacion(vista.fecha_CreacionKits.getDate());
+        p.setFechaActualizacion(vista.fecha_ActualizacionKits.getDate());
+        p.setValoracion(vista.valoracionSliderKit.getValue());
+        if (vista.precioKit.getText().trim().length()>0)
+        {
+            p.setPrecio(Float.parseFloat(vista.precioKit.getText()));
+        }
+
+        if (vista.comboBoxEmpresaKit.getSelectedIndex()>=0)
+        {
+            p.setEmpresasKit(Integer.parseInt(String.valueOf(vista.comboBoxEmpresaKit.getSelectedItem() ).split("-")[0]));
+        }
+        if (vista.comboBoxProductoKits.getSelectedIndex()>=0)
+        {
+            p.setProductoKit(Integer.parseInt(String.valueOf(vista.comboBoxProductoKits.getSelectedItem() ).split("-")[0]));
+        }
+
+        if (p.valido())
+        {
+            try {
+                modelo.actualizarKitEducativo(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            resfrecarKits();
+            borrarCamposKits();
+
+        }
+        else{
+            Util.showErrorAlert("Rellene todos los campos");
+        }
+
+
+    }
+
+    private void eliminarKits() {
+        if (vista.tablaKits.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
+        int id = Integer.parseInt(String.valueOf(vista.tablaKits.getValueAt(vista.tablaKits.getSelectedRow(),0)));
+        modelo.eliminarKit(id);
+        borrarCamposKits();
+        resfrecarKits();
+
     }
 
     private void refrescarTodo()  {
@@ -221,6 +321,12 @@ private Vista vista;
     void resfrescarProductos () {
         try {
             vista.tablaProductos.setModel(construirTableModelProductos(modelo.obtenerProductos()));
+            vista.comboBoxProductoKits.removeAllItems();
+            for(int i = 0; i < vista.dtmProductos.getRowCount(); i++) {
+                vista.comboBoxProductoKits.addItem(vista.dtmProductos.getValueAt(i, 0)+
+                        "-"+
+                        vista.dtmProductos.getValueAt(i, 1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -341,6 +447,12 @@ private Vista vista;
     {
         try {
             vista.tablaEmrpresa.setModel(construirTableModelEmpresa(modelo.obtenerEmpresas()));
+            vista.comboBoxEmpresaKit.removeAllItems();
+            for(int i = 0; i < vista.dtmEmpresa.getRowCount(); i++) {
+                vista.comboBoxEmpresaKit.addItem(vista.dtmEmpresa.getValueAt(i, 0)+
+                        "-"+
+                        vista.dtmEmpresa.getValueAt(i, 1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -397,6 +509,7 @@ private Vista vista;
     {
         try {
             vista.tablaKits.setModel (construirTableModelKits(modelo.obtenerKitEducativo()));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -404,11 +517,66 @@ private Vista vista;
 
     private void adicionarKits()
     {
+        Kit_Educativo p = new Kit_Educativo();
+        p.setNombre(vista.nombreKit.getText());
+        p.setDescripcion(vista.descripcionKit.getText());
+        if (vista.cantidadKit.getText().trim().length()>0)
+        {
+            p.setCantidad(Integer.parseInt(vista.cantidadKit.getText()));
+        }
+        p.setFechaCreacion(vista.fecha_CreacionKits.getDate());
+        p.setFechaActualizacion(vista.fecha_ActualizacionKits.getDate());
+        p.setValoracion(vista.valoracionSliderKit.getValue());
+        if (vista.precioKit.getText().trim().length()>0)
+        {
+            p.setPrecio(Float.parseFloat(vista.precioKit.getText()));
+        }
 
+
+
+        if (vista.comboBoxEmpresaKit.getSelectedIndex()>=0)
+        {
+            p.setEmpresasKit(Integer.parseInt(String.valueOf(vista.comboBoxEmpresaKit.getSelectedItem() ).split("-")[0]));
+        }
+        if (vista.comboBoxProductoKits.getSelectedIndex()>=0)
+        {
+            p.setProductoKit(Integer.parseInt(String.valueOf(vista.comboBoxProductoKits.getSelectedItem() ).split("-")[0]));
+        }
+
+
+
+        if (p.valido())
+        {
+            try {
+                modelo.adicionarKitEducativo(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            resfrecarKits();
+            borrarCamposKits();
+        }
+        else{
+            Util.showErrorAlert("Rellene todos los campos");
+        }
     }
 
-    private DefaultTableModel construirTableModelKits(ResultSet rs)
-    {
+    private DefaultTableModel construirTableModelKits(ResultSet rs) throws SQLException {
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("id");
+        columnNames.add("nombre");
+        columnNames.add("descripcion");
+        columnNames.add("cantidad");
+        columnNames.add("fecha_de_creacion");
+        columnNames.add("fecha_de_actualizacion");
+        columnNames.add("precio");
+        columnNames.add("valoracion");
+        columnNames.add("empresa");
+        columnNames.add("producto");
+        Vector<Vector<Object>> data = new Vector<>();
+        setDataVector(rs, columnNames.size(), data);
+
+            vista.dtmKits.setDataVector(data, columnNames);
+
 
         return vista.dtmKits;
     }

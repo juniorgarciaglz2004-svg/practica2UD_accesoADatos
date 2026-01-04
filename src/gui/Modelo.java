@@ -186,34 +186,53 @@ public class Modelo {
                 "descripcion," +
                 "cantidad," +
                 "fecha_de_creacion," +
-                "fecha_de_actualizacion)" +
-                "precio)" +
-                "valoracion)" +
+                "fecha_de_actualizacion," +
+                "precio," +
+                "valoracion," +
+                "id_producto," +
+                "id_empresa)" +
                 "VALUES" +
                 "(" +
                 "?," +
                 "?," +
                 "?," +
                 "?," +
+                "?," +
+                "?," +
+                "?," +
+                "?," +
                 "?)";
         PreparedStatement statement = conexion.prepareStatement(sql);
-
+        statement.setString(1,k.getNombre());
+        statement.setString(2,k.getDescripcion());
+        statement.setInt(3,k.getCantidad());
+        statement.setDate(4,Date.valueOf(k.getFechaCreacion()));
+        statement.setDate(5,Date.valueOf(k.getFechaActualizacion()));
+        statement.setFloat(6,k.getPrecio());
+        statement.setInt(7,k.getValoracion());
+        statement.setInt(8,k.getProductoKit());
+        statement.setInt(9,k.getEmpresasKit());
         statement.executeUpdate();
 
 
     }
 
     public ResultSet obtenerKitEducativo() throws SQLException {
-        String sql =   "SELECT " +
-                "id_kit as id, " +
-                "nombre," +
-                "descripcion," +
-                "cantidad," +
-                "fecha_de_creacion," +
-                "fecha_de_actualizacion," +
-                "precio, " +
-                "valoracion " +
-                " FROM kit_educativo";
+        String sql =   "SELECT  " +
+                "k.id_kit," +
+                "k.nombre," +
+                "k.descripcion," +
+                "k.cantidad," +
+                "k.fecha_de_actualizacion," +
+                "k.fecha_de_creacion," +
+                "k.precio," +
+                "k.valoracion, " +
+                "concat(e.id_empresa,'-',e.nombre) as 'empresa' ,  " +
+                "concat(p.id_producto,'-',p.nombre) as 'producto'  " +
+                "FROM kit_educativo k " +
+                "inner join empresa e on e.id_empresa = k.id_empresa " +
+                "inner join producto p on p.id_producto = k.id_producto ";
+
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
         sentencia = conexion.prepareStatement(sql);
@@ -223,6 +242,54 @@ public class Modelo {
 
 
     }
+
+    public void actualizarKitEducativo(Kit_Educativo k) throws SQLException {
+        String sql = "update kit_educativo set " +
+                "nombre = ?, " +
+                "descripcion = ?, " +
+                "cantidad = ?, " +
+                "fecha_de_creacion = ?, " +
+                "fecha_de_actualizacion = ?, " +
+                "precio = ?, " +
+                "valoracion = ?, " +
+                "id_producto = ?, " +
+                "id_empresa = ? " +
+                "WHERE id_kit = ?";
+
+        PreparedStatement statement = conexion.prepareStatement(sql);
+        statement.setString(1,k.getNombre());
+        statement.setString(2,k.getDescripcion());
+        statement.setInt(3,k.getCantidad());
+        statement.setDate(4,Date.valueOf(k.getFechaCreacion()));
+        statement.setDate(5,Date.valueOf(k.getFechaActualizacion()));
+        statement.setFloat(6,k.getPrecio());
+        statement.setInt(7,k.getValoracion());
+        statement.setInt(8,k.getProductoKit());
+        statement.setInt(9,k.getEmpresasKit());
+        statement.setInt(10,k.getId());
+        statement.executeUpdate();
+    }
+
+    void eliminarKit(int id) {
+        String sentenciaSql = "DELETE FROM kit_educativo WHERE id_kit = ?";
+        PreparedStatement sentencia = null;
+
+        try {
+            sentencia = conexion.prepareStatement(sentenciaSql);
+            sentencia.setInt(1, id);
+            sentencia.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (sentencia != null)
+                try {
+                    sentencia.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+        }
+    }
+
 
     //PARTE EMPRESA
 
