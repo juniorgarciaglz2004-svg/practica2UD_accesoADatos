@@ -1,16 +1,16 @@
 package gui;
 
+import modelo_Clases.Empresa;
 import modelo_Clases.EstadoProducto;
 import modelo_Clases.Producto;
 import util.Util;
 
-import javax.management.StringValueExp;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.Date;
 import java.util.Vector;
 
 public class Controlador {
@@ -22,7 +22,9 @@ private Vista vista;
         this.modelo = modelo;
         this.vista = vista;
         modelo.conectar();
-        adicionarActionListeners();
+        adicionarActionListenersProductos();
+        adicionarActionListenersEmpresas();
+
         refrescarTodo();
     }
 
@@ -34,7 +36,7 @@ private Vista vista;
     }
 
 
-    private void adicionarActionListeners()
+    private void adicionarActionListenersProductos()
     {
         vista.anadir_PRODUCTOSButton.addActionListener(e -> adicionarProducto());
         vista.eliminar_ProductosButton.addActionListener(e -> eliminarProducto());
@@ -79,6 +81,47 @@ private Vista vista;
 
 
     }
+
+
+    private void adicionarActionListenersEmpresas()
+    {
+        vista.anadir_EmpresaButton.addActionListener(e -> adicionarEmpresas());
+        vista.eliminar_EmpresaButton.addActionListener(e -> eliminarEmpresas());
+        vista.modificar_EmpresaButton.addActionListener(e -> modificarEmpresas());
+        vista.tablaEmrpresa.setCellSelectionEnabled(true);
+        ListSelectionModel empresaModelSeleccion = vista.tablaEmrpresa.getSelectionModel();
+        empresaModelSeleccion.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()
+                    && !((ListSelectionModel) e.getSource()).isSelectionEmpty()) {
+                if (e.getSource().equals(vista.tablaEmrpresa.getSelectionModel())) {
+                    int row = vista.tablaEmrpresa.getSelectedRow();
+                    vista.nombreEmpresa.setText(String.valueOf(vista.tablaEmrpresa.getValueAt(row, 1)));
+                    vista.descripcionEmpresa.setText(String.valueOf(vista.tablaEmrpresa.getValueAt(row, 2)));
+
+                    vista.fecha_creacion_Empresa.setDate(((Date) vista.tablaEmrpresa.getValueAt(row, 3)).toLocalDate());
+
+                    vista.ubicacionEmpresa.setText(String.valueOf(vista.tablaEmrpresa.getValueAt(row, 4)));
+                    vista.valoracionSliderEmpresa.setValue((Integer)vista.tablaEmrpresa.getValueAt(row, 5));
+
+
+                } else if (e.getValueIsAdjusting()
+                        && ((ListSelectionModel) e.getSource()).isSelectionEmpty() && !refrescar) {
+                    if (e.getSource().equals(vista.tablaKits.getSelectionModel())) {
+                        borrarCamposKits();
+                    } else if (e.getSource().equals(vista.tablaEmrpresa.getSelectionModel())) {
+                        borrarCamposEmpresa();
+                    } else if (e.getSource().equals(vista.tablaProductos.getSelectionModel())) {
+                        borrarCamposProductos();
+                    }
+                }}});
+
+
+
+
+    }
+
+
+
 
     private void modificarProducto() {
 
@@ -247,10 +290,57 @@ private Vista vista;
 
     //parte de empresa
 
+    private void eliminarEmpresas() {
+
+        if (vista.tablaEmrpresa.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
+        int id = Integer.parseInt(String.valueOf(vista.tablaEmrpresa.getValueAt(vista.tablaEmrpresa.getSelectedRow(),0)));
+        modelo.eliminarEmpresa(id);
+        borrarCamposEmpresa();
+        resfrecarEmpresa();
+
+    }
+
+    private void modificarEmpresas() {
+        if (vista.tablaEmrpresa.getSelectedRow()==-1)
+        {
+            //no se ha seleccionado ninguna fila
+            return;
+        }
+
+        Empresa p = new Empresa();
+        p.setId((Integer) vista.tablaEmrpresa.getValueAt(vista.tablaEmrpresa.getSelectedRow(),0));
+        p.setNombre(vista.nombreEmpresa.getText());
+        p.setDescripcion(vista.descripcionEmpresa.getText());
+        p.setFechaCreacion(vista.fecha_creacion_Empresa.getDate());
+        p.setUbicacion(vista.ubicacionEmpresa.getText());
+        p.setValoracion(vista.valoracionSliderEmpresa.getValue());
+
+
+        if (p.valido())
+        {
+            try {
+                modelo.actualizarEmpresa(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            resfrecarEmpresa();
+            borrarCamposEmpresa();
+
+        }
+        else{
+            Util.showErrorAlert("Rellene todos los campos");
+        }
+
+    }
+
     void resfrecarEmpresa()
     {
         try {
-            vista.tablaEmrpresa.setModel(construirTableModelEmpresa(modelo.obtenerEmpresa()));
+            vista.tablaEmrpresa.setModel(construirTableModelEmpresa(modelo.obtenerEmpresas()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -260,10 +350,43 @@ private Vista vista;
     private void adicionarEmpresas()
     {
 
+        Empresa p = new Empresa();
+        p.setNombre(vista.nombreEmpresa.getText());
+        p.setDescripcion(vista.descripcionEmpresa.getText());
+        p.setFechaCreacion(vista.fecha_creacion_Empresa.getDate());
+        p.setUbicacion(vista.ubicacionEmpresa.getText());
+        p.setValoracion(vista.valoracionSliderEmpresa.getValue());
+
+
+        if (p.valido())
+        {
+            try {
+                modelo.adicionarEmpresas(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            resfrecarEmpresa();
+            borrarCamposEmpresa();
+        }
+        else{
+            Util.showErrorAlert("Rellene todos los campos");
+        }
+
+
     }
 
-    private DefaultTableModel construirTableModelEmpresa(ResultSet rs)
-    {
+    private DefaultTableModel construirTableModelEmpresa(ResultSet rs) throws SQLException {
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("id");
+        columnNames.add("nombre");
+        columnNames.add("descripcion");
+        columnNames.add("fecha_de_creacion");
+        columnNames.add("ubicacion");
+        columnNames.add("valoracion");
+        Vector<Vector<Object>> data = new Vector<>();
+        setDataVector(rs, columnNames.size(), data);
+
+        vista.dtmEmpresa.setDataVector(data, columnNames);
 
         return vista.dtmEmpresa;
     }

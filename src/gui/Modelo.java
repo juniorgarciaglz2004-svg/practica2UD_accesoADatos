@@ -235,7 +235,7 @@ public class Modelo {
                 " descripcion, " +
                 " fecha_de_creacion, " +
                 " ubicacion, " +
-                " valoracion " +
+                " valoracion) " +
                 "VALUES" +
                 "(" +
                 "?," +
@@ -244,11 +244,16 @@ public class Modelo {
                 "?," +
                 "?)";
         PreparedStatement statement = conexion.prepareStatement(sql);
-
+        statement.setString(1,em.getNombre());
+        statement.setString(2,em.getDescripcion());
+        statement.setDate(3,Date.valueOf(em.getFechaCreacion()));
+        statement.setString(4,em.getUbicacion());
+        statement.setInt(5,em.getValoracion());
         statement.executeUpdate();
+
     }
 
-    public ResultSet obtenerEmpresa() throws SQLException {
+    public ResultSet obtenerEmpresas() throws SQLException {
         String sql =   "SELECT " +
                 "id_empresa as id, " +
                 " nombre, " +
@@ -262,6 +267,46 @@ public class Modelo {
         sentencia = conexion.prepareStatement(sql);
         resultado = sentencia.executeQuery();
         return resultado;
+    }
+
+
+    public void actualizarEmpresa(Empresa em) throws SQLException {
+        String sql = "update empresa set " +
+                "nombre = ?," +
+                "descripcion = ?," +
+                "fecha_de_creacion = ?," +
+                "ubicacion = ?," +
+                "valoracion = ? " +
+                "WHERE id_empresa = ?";
+
+        PreparedStatement statement = conexion.prepareStatement(sql);
+        statement.setString(1,em.getNombre());
+        statement.setString(2,em.getDescripcion());
+        statement.setDate(3,Date.valueOf(em.getFechaCreacion()));
+        statement.setString(4,em.getUbicacion());
+        statement.setInt(5,em.getValoracion());
+        statement.setInt(6,em.getId());
+        statement.executeUpdate();
+    }
+
+    void eliminarEmpresa(int id) {
+        String sentenciaSql = "DELETE FROM empresa WHERE id_empresa = ?";
+        PreparedStatement sentencia = null;
+
+        try {
+            sentencia = conexion.prepareStatement(sentenciaSql);
+            sentencia.setInt(1, id);
+            sentencia.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (sentencia != null)
+                try {
+                    sentencia.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package modelo_Clases;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Empresa {
@@ -7,9 +8,9 @@ public class Empresa {
     private int id;
     private String nombre;
     private String descripcion;
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
     private String ubicacion;
-    private String valoracion;
+    private int valoracion;
 
     public int getId() {
         return id;
@@ -35,11 +36,11 @@ public class Empresa {
         this.descripcion = descripcion;
     }
 
-    public Date getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -51,15 +52,15 @@ public class Empresa {
         this.ubicacion = ubicacion;
     }
 
-    public String getValoracion() {
+    public int getValoracion() {
         return valoracion;
     }
 
-    public void setValoracion(String valoracion) {
+    public void setValoracion(int valoracion) {
         this.valoracion = valoracion;
     }
 
-    public Empresa(int id, String nombre, String descripcion, Date fechaCreacion, String ubicacion, String valoracion) {
+    public Empresa(int id, String nombre, String descripcion, LocalDate fechaCreacion, String ubicacion, int valoracion) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -70,4 +71,37 @@ public class Empresa {
 
     public Empresa() {
     }
+
+
+    public boolean valido () {
+
+        if (nombre.trim().length()==0)
+        {
+            return false;
+        }
+        if (descripcion.trim().length()==0)
+        {
+            return false;
+        }
+
+        if (fechaCreacion==null)
+        {
+            return false;
+        }
+
+        if (ubicacion.trim().length()==0)
+        {
+            return false;
+        }
+        if (valoracion<0)
+        {
+            return false;
+        }
+
+
+        return true;
+    }
+
+
+
 }
