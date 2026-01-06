@@ -14,7 +14,7 @@ public class Modelo {
     private String password;
     private String db;
     private Connection conexion;
-
+    public String deletePass;
     public Modelo() {
         getPropValues();
     }
@@ -32,7 +32,7 @@ public class Modelo {
             user = prop.getProperty("user");
             password = prop.getProperty("pass");
             db = prop.getProperty("db");
-
+            deletePass = prop.getProperty("delete_pass");
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         } finally {

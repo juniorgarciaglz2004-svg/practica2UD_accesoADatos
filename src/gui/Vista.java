@@ -1,6 +1,7 @@
 package gui;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import util.Util;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -48,6 +49,9 @@ public class Vista extends JFrame{
     DefaultTableModel dtmKits;
     DefaultTableModel dtmEmpresa;
 
+    public JButton btnValidate;
+    public JDialog dialogoDeEliminacion;
+    public JPasswordField contrasenaDeEliminacion;
 
     public Vista() {
         super("TITULO");
@@ -64,9 +68,28 @@ public class Vista extends JFrame{
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         setTableModels();
+        crearDialogoSeguridad();
 
 
     }
+
+    public void crearDialogoSeguridad() {
+        btnValidate = new JButton("Validar");
+        contrasenaDeEliminacion = new JPasswordField();
+        //dimension al cuadro de texto
+        contrasenaDeEliminacion.setPreferredSize(new Dimension(100, 26));
+        Object[] options = new Object[]{contrasenaDeEliminacion, btnValidate};
+        JOptionPane jop = new JOptionPane("Introduce la contraseña", JOptionPane.WARNING_MESSAGE,
+                JOptionPane.YES_NO_OPTION, null, options);
+        dialogoDeEliminacion = new JDialog(this, "Opciones", true);
+        dialogoDeEliminacion.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogoDeEliminacion.setContentPane(jop);
+        dialogoDeEliminacion.pack();
+        dialogoDeEliminacion.setLocationRelativeTo(this);
+
+    }
+
+
     private void setTableModels() {
 
         this.dtmProductos=new DefaultTableModel();
