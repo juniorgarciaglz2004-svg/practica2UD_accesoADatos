@@ -54,16 +54,14 @@ public class Vista extends JFrame{
     public JPasswordField contrasenaDeEliminacion;
 
     public Vista() {
-        super("TITULO");
+        super("TIENDA DE ROBOTICA Y KITS EDUCATIVOS PARA NIÑOS");
         initFrame();
     }
 
     public void initFrame() {
         this.setContentPane(panel1);
-        //al clickar en cerrar no hace nada
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
-        //doy dimension
         this.setSize(new Dimension(this.getWidth()+100,this.getHeight()));
         this.setVisible(true);
         this.setLocationRelativeTo(null);
@@ -76,7 +74,6 @@ public class Vista extends JFrame{
     public void crearDialogoSeguridad() {
         btnValidate = new JButton("Validar");
         contrasenaDeEliminacion = new JPasswordField();
-        //dimension al cuadro de texto
         contrasenaDeEliminacion.setPreferredSize(new Dimension(100, 26));
         Object[] options = new Object[]{contrasenaDeEliminacion, btnValidate};
         JOptionPane jop = new JOptionPane("Introduce la contraseña", JOptionPane.WARNING_MESSAGE,

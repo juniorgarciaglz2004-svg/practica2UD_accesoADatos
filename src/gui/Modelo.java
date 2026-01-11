@@ -72,7 +72,7 @@ public class Modelo {
     }
 
     private String leerFichero() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("mysql.sql")) ;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/mysql.sql")) ) ;
         String linea;
         StringBuilder stringBuilder = new StringBuilder();
         while ((linea = reader.readLine()) != null) {
